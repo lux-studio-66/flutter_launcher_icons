@@ -16,6 +16,10 @@ part 'flutter_launcher_icons_config.g.dart';
   checked: true,
 )
 class FlutterLauncherIconsConfig {
+  /// Module that generate
+  @JsonKey(name: 'app_module')
+  final String? appModule;
+
   /// Generic imagepath
   @JsonKey(name: 'image_path')
   final String? imagePath;
@@ -42,10 +46,6 @@ class FlutterLauncherIconsConfig {
   @JsonKey(name: 'adaptive_icon_background')
   final String? adaptiveIconBackground;
 
-  /// Android min_sdk_android
-  @JsonKey(name: 'min_sdk_android')
-  final int minSdkAndroid;
-
   /// IOS remove_alpha_ios
   @JsonKey(name: 'remove_alpha_ios')
   final bool removeAlphaIOS;
@@ -64,6 +64,7 @@ class FlutterLauncherIconsConfig {
 
   /// Creates an instance of [FlutterLauncherIconsConfig]
   const FlutterLauncherIconsConfig({
+    this.appModule,
     this.imagePath,
     this.android = false,
     this.ios = false,
@@ -71,7 +72,6 @@ class FlutterLauncherIconsConfig {
     this.imagePathIOS,
     this.adaptiveIconForeground,
     this.adaptiveIconBackground,
-    this.minSdkAndroid = constants.androidDefaultAndroidMinSDK,
     this.removeAlphaIOS = false,
     this.webConfig,
     this.windowsConfig,
@@ -104,6 +104,8 @@ class FlutterLauncherIconsConfig {
   bool get isNeedingNewAndroidIcon => android != false;
 
   bool get isNeedingNewIOSIcon => ios != false;
+
+  String? getAppModule() => appModule ?? '';
 
   /// Method for the retrieval of the Android icon path
   /// If image_path_android is found, this will be prioritised over the image_path

@@ -65,49 +65,49 @@ void createIcons(FlutterLauncherIconsConfig config, String? flavor) {
     final String catalogName = 'AppIcon-$flavor';
     printStatus('Building iOS launcher icon for $flavor');
     for (IosIconTemplate template in iosIcons) {
-      saveNewIcons(template, image, catalogName);
+      saveNewIcons(template, config.getAppModule(), image, catalogName);
     }
     iconName = iosDefaultIconName;
-    changeIosLauncherIcon(catalogName, flavor);
-    modifyContentsFile(catalogName);
+    changeIosLauncherIcon(config.getAppModule(), catalogName, flavor);
+    modifyContentsFile(config.getAppModule(), catalogName);
   } else if (iosConfig is String) {
     // If the IOS configuration is a string then the user has specified a new icon to be created
     // and for the old icon file to be kept
     final String newIconName = iosConfig;
     printStatus('Adding new iOS launcher icon');
     for (IosIconTemplate template in iosIcons) {
-      saveNewIcons(template, image, newIconName);
+      saveNewIcons(template, config.getAppModule(), image, newIconName);
     }
     iconName = newIconName;
-    changeIosLauncherIcon(iconName, flavor);
-    modifyContentsFile(iconName);
+    changeIosLauncherIcon(config.getAppModule(), iconName, flavor);
+    modifyContentsFile(config.getAppModule(), iconName);
   }
   // Otherwise the user wants the new icon to use the default icons name and
   // update config file to use it
   else {
     printStatus('Overwriting default iOS launcher icon with new icon');
     for (IosIconTemplate template in iosIcons) {
-      overwriteDefaultIcons(template, image);
+      overwriteDefaultIcons(template, config.getAppModule(), image);
     }
     iconName = iosDefaultIconName;
-    changeIosLauncherIcon('AppIcon', flavor);
+    changeIosLauncherIcon(config.getAppModule(), 'AppIcon', flavor);
   }
 }
 
 /// Note: Do not change interpolation unless you end up with better results (see issue for result when using cubic
 /// interpolation)
 /// https://github.com/fluttercommunity/flutter_launcher_icons/issues/101#issuecomment-495528733
-void overwriteDefaultIcons(IosIconTemplate template, Image image) {
+void overwriteDefaultIcons(IosIconTemplate template, String? appModule, Image image) {
   final Image newFile = createResizedImage(template, image);
-  File(iosDefaultIconFolder + iosDefaultIconName + template.name + '.png')
+  File(iosDefaultIconFolder(appModule) + iosDefaultIconName + template.name + '.png')
     ..writeAsBytesSync(encodePng(newFile));
 }
 
 /// Note: Do not change interpolation unless you end up with better results (see issue for result when using cubic
 /// interpolation)
 /// https://github.com/fluttercommunity/flutter_launcher_icons/issues/101#issuecomment-495528733
-void saveNewIcons(IosIconTemplate template, Image image, String newIconName) {
-  final String newIconFolder = iosAssetFolder + newIconName + '.appiconset/';
+void saveNewIcons(IosIconTemplate template, String? appModule, Image image, String newIconName) {
+  final String newIconFolder = iosAssetFolder(appModule) + newIconName + '.appiconset/';
   final Image newFile = createResizedImage(template, image);
   File(newIconFolder + newIconName + template.name + '.png')
       .create(recursive: true)
@@ -134,8 +134,8 @@ Image createResizedImage(IosIconTemplate template, Image image) {
   }
 }
 
-Future<void> changeIosLauncherIcon(String iconName, String? flavor) async {
-  final File iOSConfigFile = File(iosConfigFile);
+Future<void> changeIosLauncherIcon(String? appModule, String iconName, String? flavor) async {
+  final File iOSConfigFile = File(iosConfigFile(appModule));
   final List<String> lines = await iOSConfigFile.readAsLines();
 
   bool onConfigurationSection = false;
@@ -168,9 +168,9 @@ Future<void> changeIosLauncherIcon(String iconName, String? flavor) async {
 }
 
 /// Create the Contents.json file
-void modifyContentsFile(String newIconName) {
+void modifyContentsFile(String? appModule, String newIconName) {
   final String newIconFolder =
-      iosAssetFolder + newIconName + '.appiconset/Contents.json';
+      iosAssetFolder(appModule) + newIconName + '.appiconset/Contents.json';
   File(newIconFolder).create(recursive: true).then((File contentsJsonFile) {
     final String contentsFileContent =
         generateContentsFileAsString(newIconName);

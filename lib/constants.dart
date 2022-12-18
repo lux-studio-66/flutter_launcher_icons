@@ -1,16 +1,16 @@
 import 'package:path/path.dart' as path;
 
 /// Relative path to android resource folder
-String androidResFolder(String? flavor) =>
-    "android/app/src/${flavor ?? 'main'}/res/";
+String androidResFolder(String? appModule, String? flavor) =>
+    "${appModule?.isEmpty == true ? '' : '../$appModule/'}android/app/src/${flavor ?? 'main'}/res/";
 
 /// Relative path to android colors.xml file
-String androidColorsFile(String? flavor) =>
-    "android/app/src/${flavor ?? 'main'}/res/values/colors.xml";
+String androidColorsFile(String? appModule, String? flavor) =>
+    "${appModule?.isEmpty == true ? '' : '../$appModule/'}android/app/src/${flavor ?? 'main'}/res/values/colors.xml";
 
-const String androidManifestFile = 'android/app/src/main/AndroidManifest.xml';
-const String androidGradleFile = 'android/app/build.gradle';
-const String androidLocalPropertiesFile = 'android/local.properties';
+String androidManifestFile(String? appModule) => '${appModule?.isEmpty == true ? '' : '../$appModule/'}android/app/src/main/AndroidManifest.xml';
+String androidGradleFile(String? appModule) => '${appModule?.isEmpty == true ? '' : '../$appModule/'}android/app/build.gradle';
+String androidLocalPropertiesFile(String? appModule) => '${appModule?.isEmpty == true ? '' : '../$appModule/'}android/local.properties';
 
 /// Relative path to flutter.gradle from flutter sdk path
 const String androidFlutterGardlePath =
@@ -22,14 +22,14 @@ const int androidDefaultAndroidMinSDK = 21;
 const String androidFileName = 'ic_launcher.png';
 const String androidAdaptiveForegroundFileName = 'ic_launcher_foreground.png';
 const String androidAdaptiveBackgroundFileName = 'ic_launcher_background.png';
-String androidAdaptiveXmlFolder(String? flavor) =>
-    androidResFolder(flavor) + 'mipmap-anydpi-v26/';
+String androidAdaptiveXmlFolder(String? appModule, String? flavor) =>
+    androidResFolder(appModule, flavor) + 'mipmap-anydpi-v26/';
 const String androidDefaultIconName = 'ic_launcher';
 
-const String iosDefaultIconFolder =
-    'ios/Runner/Assets.xcassets/AppIcon.appiconset/';
-const String iosAssetFolder = 'ios/Runner/Assets.xcassets/';
-const String iosConfigFile = 'ios/Runner.xcodeproj/project.pbxproj';
+String iosDefaultIconFolder(String? appModule) =>
+    '${appModule?.isEmpty == true ? '' : '../$appModule/'}ios/Runner/Assets.xcassets/AppIcon.appiconset/';
+String iosAssetFolder(String? appModule) => '${appModule?.isEmpty == true ? '' : '../$appModule/'}ios/Runner/Assets.xcassets/';
+String iosConfigFile(String? appModule) => '${appModule?.isEmpty == true ? '' : '../$appModule/'}ios/Runner.xcodeproj/project.pbxproj';
 const String iosDefaultIconName = 'Icon-App';
 
 // web
@@ -88,9 +88,6 @@ const String errorMissingPlatform =
 const String errorMissingRegularAndroid =
     'Adaptive icon config found but no regular Android config. '
     'Below API 26 the regular Android config is required';
-const String errorMissingMinSdk =
-    'Cannot not find minSdk from android/app/build.gradle or android/local.properties'
-    ' Specify minSdk in your flutter_launcher_config.yaml with "min_sdk_android"';
 const String errorIncorrectIconName =
     'The icon name must contain only lowercase a-z, 0-9, or underscore: '
     'E.g. "ic_my_new_icon"';

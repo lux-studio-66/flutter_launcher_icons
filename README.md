@@ -21,7 +21,6 @@ flutter_icons:
   android: "launcher_icon"
   ios: true
   image_path: "assets/icon/icon.png"
-  min_sdk_android: 21 # android min sdk min:16, default 21
   web:
     generate: true
     image_path: "path/to/image.png"
@@ -76,7 +75,6 @@ Shown below is the full list of attributes which you can specify within your Flu
   - `icon/path/here.png`: This will generate a new launcher icons for the platform with the name you specify, without removing the old default existing Flutter launcher icon.
 - `image_path`: The location of the icon image file which you want to use as the app launcher icon
 - `image_path_android`: The location of the icon image file specific for Android platform (optional - if not defined then the image_path is used)
-- `min_sdk_android`: Specify android min sdk value
 **The next two attributes are only used when generating Android launcher icon**
 
 - `adaptive_icon_background`: The color (E.g. `"#ffffff"`) or image asset (E.g. `"assets/images/christmas-background.png"`) which will

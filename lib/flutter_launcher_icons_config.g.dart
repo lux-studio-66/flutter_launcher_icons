@@ -12,6 +12,7 @@ FlutterLauncherIconsConfig _$FlutterLauncherIconsConfigFromJson(Map json) =>
       json,
       ($checkedConvert) {
         final val = FlutterLauncherIconsConfig(
+          appModule: $checkedConvert('app_module', (v) => v as String?),
           imagePath: $checkedConvert('image_path', (v) => v as String?),
           android: $checkedConvert('android', (v) => v ?? false),
           ios: $checkedConvert('ios', (v) => v ?? false),
@@ -22,8 +23,6 @@ FlutterLauncherIconsConfig _$FlutterLauncherIconsConfigFromJson(Map json) =>
               $checkedConvert('adaptive_icon_foreground', (v) => v as String?),
           adaptiveIconBackground:
               $checkedConvert('adaptive_icon_background', (v) => v as String?),
-          minSdkAndroid: $checkedConvert('min_sdk_android',
-              (v) => v as int? ?? constants.androidDefaultAndroidMinSDK),
           removeAlphaIOS:
               $checkedConvert('remove_alpha_ios', (v) => v as bool? ?? false),
           webConfig: $checkedConvert(
@@ -36,12 +35,12 @@ FlutterLauncherIconsConfig _$FlutterLauncherIconsConfigFromJson(Map json) =>
         return val;
       },
       fieldKeyMap: const {
+        'appModule': 'app_module',
         'imagePath': 'image_path',
         'imagePathAndroid': 'image_path_android',
         'imagePathIOS': 'image_path_ios',
         'adaptiveIconForeground': 'adaptive_icon_foreground',
         'adaptiveIconBackground': 'adaptive_icon_background',
-        'minSdkAndroid': 'min_sdk_android',
         'removeAlphaIOS': 'remove_alpha_ios',
         'webConfig': 'web',
         'windowsConfig': 'windows',
@@ -52,6 +51,7 @@ FlutterLauncherIconsConfig _$FlutterLauncherIconsConfigFromJson(Map json) =>
 Map<String, dynamic> _$FlutterLauncherIconsConfigToJson(
         FlutterLauncherIconsConfig instance) =>
     <String, dynamic>{
+      'app_module': instance.appModule,
       'image_path': instance.imagePath,
       'android': instance.android,
       'ios': instance.ios,
@@ -59,7 +59,6 @@ Map<String, dynamic> _$FlutterLauncherIconsConfigToJson(
       'image_path_ios': instance.imagePathIOS,
       'adaptive_icon_foreground': instance.adaptiveIconForeground,
       'adaptive_icon_background': instance.adaptiveIconBackground,
-      'min_sdk_android': instance.minSdkAndroid,
       'remove_alpha_ios': instance.removeAlphaIOS,
       'web': instance.webConfig,
       'windows': instance.windowsConfig,
