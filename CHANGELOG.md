@@ -31,7 +31,6 @@
 - Support for Web Icons [#374](https://github.com/fluttercommunity/flutter_launcher_icons/pull/374)
 - Support for Windows Icons [#382](https://github.com/fluttercommunity/flutter_launcher_icons/pull/382)
 - Added missing IOS icon sizes [#298](https://github.com/fluttercommunity/flutter_launcher_icons/pull/298)
-- Added `min_sdk_android` option [#392](https://github.com/fluttercommunity/flutter_launcher_icons/pull/392)
 - Added documentation for `remove_alpha_ios` [#392](https://github.com/fluttercommunity/flutter_launcher_icons/pull/392)
 - Fixed issue with loading config from `pubspec.yaml` [#398](https://github.com/fluttercommunity/flutter_launcher_icons/pull/398) (thanks to [@p-mazhnik](https://github.com/p-mazhnik))
 

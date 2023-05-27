@@ -11,6 +11,7 @@ Config _$ConfigFromJson(Map json) => $checkedCreate(
       json,
       ($checkedConvert) {
         final val = Config(
+          appModule: $checkedConvert('app_module', (v) => v as String?),
           imagePath: $checkedConvert('image_path', (v) => v as String?),
           android: $checkedConvert('android', (v) => v ?? false),
           ios: $checkedConvert('ios', (v) => v ?? false),
@@ -37,6 +38,7 @@ Config _$ConfigFromJson(Map json) => $checkedCreate(
         return val;
       },
       fieldKeyMap: const {
+        'appModule': 'app_module',
         'imagePath': 'image_path',
         'imagePathAndroid': 'image_path_android',
         'imagePathIOS': 'image_path_ios',
@@ -52,6 +54,7 @@ Config _$ConfigFromJson(Map json) => $checkedCreate(
     );
 
 Map<String, dynamic> _$ConfigToJson(Config instance) => <String, dynamic>{
+      'app_module': instance.appModule,
       'image_path': instance.imagePath,
       'android': instance.android,
       'ios': instance.ios,
