@@ -1,20 +1,27 @@
+// ignore_for_file: public_member_api_docs
+
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter_launcher_icons/config/config.dart';
 import 'package:flutter_launcher_icons/constants.dart';
 import 'package:flutter_launcher_icons/custom_exceptions.dart';
-import 'package:flutter_launcher_icons/flutter_launcher_icons_config.dart';
 import 'package:flutter_launcher_icons/utils.dart';
 import 'package:image/image.dart';
 
 /// File to handle the creation of icons for iOS platform
 class IosIconTemplate {
+  /// constructs an instance of [IosIconTemplate]
   IosIconTemplate({required this.size, required this.name});
 
+  /// suffix of the icon name
   final String name;
+
+  /// the size of the icon
   final int size;
 }
 
+/// details of the ios icons which need to be generated
 List<IosIconTemplate> iosIcons = <IosIconTemplate>[
   IosIconTemplate(name: '-20x20@1x', size: 20),
   IosIconTemplate(name: '-20x20@2x', size: 40),
@@ -39,22 +46,29 @@ List<IosIconTemplate> iosIcons = <IosIconTemplate>[
   IosIconTemplate(name: '-1024x1024@1x', size: 1024),
 ];
 
-void createIcons(FlutterLauncherIconsConfig config, String? flavor) {
-  // todo: support prefixPath
+/// create the ios icons
+void createIcons(Config config, String? flavor) {
+  // TODO(p-mazhnik): support prefixPath
   final String? filePath = config.getImagePathIOS();
   if (filePath == null) {
     throw const InvalidConfigException(errorMissingImagePath);
   }
   // decodeImageFile shows error message if null
   // so can return here if image is null
-  final Image? image = decodeImage(File(filePath).readAsBytesSync());
+  Image? image = decodeImage(File(filePath).readAsBytesSync());
   if (image == null) {
     return;
   }
-  if (config.removeAlphaIOS) {
-    image.channels = Channels.rgb;
+  if (config.removeAlphaIOS && image.hasAlpha) {
+    final backgroundColor = _getBackgroundColor(config);
+    final pixel = image.getPixel(0, 0);
+    do {
+      pixel.set(_alphaBlend(pixel, backgroundColor));
+    } while (pixel.moveNext());
+
+    image = image.convert(numChannels: 3);
   }
-  if (image.channels == Channels.rgba) {
+  if (image.hasAlpha) {
     print(
       '\nWARNING: Icons with alpha channel are not allowed in the Apple App Store.\nSet "remove_alpha_ios: true" to remove it.\n',
     );
@@ -116,6 +130,7 @@ void saveNewIcons(IosIconTemplate template, String? appModule, Image image, Stri
   });
 }
 
+/// create resized icon image
 Image createResizedImage(IosIconTemplate template, Image image) {
   if (image.width >= template.size) {
     return copyResize(
@@ -134,6 +149,7 @@ Image createResizedImage(IosIconTemplate template, Image image) {
   }
 }
 
+/// Change the iOS launcher icon
 Future<void> changeIosLauncherIcon(String? appModule, String iconName, String? flavor) async {
   final File iOSConfigFile = File(iosConfigFile(appModule));
   final List<String> lines = await iOSConfigFile.readAsLines();
@@ -377,4 +393,38 @@ List<Map<String, String>> createImageList(String fileNamePrefix) {
     ).toJson()
   ];
   return imageList;
+}
+
+ColorUint8 _getBackgroundColor(Config config) {
+  final backgroundColorHex = config.backgroundColorIOS.startsWith('#')
+      ? config.backgroundColorIOS.substring(1)
+      : config.backgroundColorIOS;
+  if (backgroundColorHex.length != 6) {
+    throw Exception('background_color_ios hex should be 6 characters long');
+  }
+
+  final backgroundByte = int.parse(backgroundColorHex, radix: 16);
+  return ColorUint8.rgba(
+    (backgroundByte >> 16) & 0xff,
+    (backgroundByte >> 8) & 0xff,
+    (backgroundByte >> 0) & 0xff,
+    0xff,
+  );
+}
+
+Color _alphaBlend(Color fg, ColorUint8 bg) {
+  if (fg.format != Format.uint8) {
+    fg = fg.convert(format: Format.uint8);
+  }
+  if (fg.a == 0) {
+    return bg;
+  } else {
+    final invAlpha = 0xff - fg.a;
+    return ColorUint8.rgba(
+      (fg.a * fg.r + invAlpha * bg.g) ~/ 0xff,
+      (fg.a * fg.g + invAlpha * bg.a) ~/ 0xff,
+      (fg.a * fg.b + invAlpha * bg.b) ~/ 0xff,
+      0xff,
+    );
+  }
 }
