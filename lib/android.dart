@@ -49,8 +49,8 @@ void createDefaultIcons(
     return;
   }
   final File androidManifestFile = File(constants.androidManifestFile(config.getAppModule()));
-  if (flutterLauncherIconsConfig.isCustomAndroidFile) {
-    printStatus('Adding a new Android launcher icon');
+  if (config.isCustomAndroidFile) {
+    utils.printStatus('Adding a new Android launcher icon');
     final String iconName = config.android;
     isAndroidIconNameCorrectFormat(iconName);
     final String iconPath = '$iconName.png';
@@ -344,24 +344,24 @@ List<String> _transformAndroidManifestWithNewLauncherIcon(
   }).toList();
 }
 
-/// Retrieves the minSdk value from the
-/// - flutter.gradle: `'$FLUTTER_ROOT/packages/flutter_tools/gradle/flutter.gradle'`
-/// - build.gradle: `'android/app/build.gradle'`
-/// - local.properties: `'android/local.properties'`
-///
-/// If found none returns [constants.androidDefaultAndroidMinSDK]
-int minSdk() {
-  final androidGradleFile = File(constants.androidGradleFile);
-  final androidLocalPropertiesFile = File(constants.androidLocalPropertiesFile);
+// /// Retrieves the minSdk value from the
+// /// - flutter.gradle: `'$FLUTTER_ROOT/packages/flutter_tools/gradle/flutter.gradle'`
+// /// - build.gradle: `'android/app/build.gradle'`
+// /// - local.properties: `'android/local.properties'`
+// ///
+// /// If found none returns [constants.androidDefaultAndroidMinSDK]
+// int minSdk() {
+//   final androidGradleFile = File(constants.androidGradleFile);
+//   final androidLocalPropertiesFile = File(constants.androidLocalPropertiesFile);
 
-  // looks for minSdk value in build.gradle, flutter.gradle & local.properties.
-  // this should always be order
-  // first check build.gradle, then local.properties, then flutter.gradle
-  return _getMinSdkFromFile(androidGradleFile) ??
-      _getMinSdkFromFile(androidLocalPropertiesFile) ??
-      _getMinSdkFlutterGradle(androidLocalPropertiesFile) ??
-      constants.androidDefaultAndroidMinSDK;
-}
+//   // looks for minSdk value in build.gradle, flutter.gradle & local.properties.
+//   // this should always be order
+//   // first check build.gradle, then local.properties, then flutter.gradle
+//   return _getMinSdkFromFile(androidGradleFile) ??
+//       _getMinSdkFromFile(androidLocalPropertiesFile) ??
+//       _getMinSdkFlutterGradle(androidLocalPropertiesFile) ??
+//       constants.androidDefaultAndroidMinSDK;
+// }
 
 /// Retrieves the minSdk value from [File]
 int? _getMinSdkFromFile(File file) {
