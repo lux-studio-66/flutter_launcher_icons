@@ -3,16 +3,16 @@
 import 'package:path/path.dart' as path;
 
 /// Relative path to android resource folder
-String androidResFolder(String? appModule, String? flavor) =>
-    "${appModule?.isEmpty == true ? '' : '../$appModule/'}android/app/src/${flavor ?? 'main'}/res/";
+String androidResFolder(String? appModule, String? flavor, bool isProjectApp) =>
+    "${appModule?.isEmpty == true ? '' : '../$appModule/'}${isProjectApp ? '' : '.'}android/app/src/${flavor ?? 'main'}/res/";
 
 /// Relative path to android colors.xml file
-String androidColorsFile(String? appModule, String? flavor) =>
-    "${appModule?.isEmpty == true ? '' : '../$appModule/'}android/app/src/${flavor ?? 'main'}/res/values/colors.xml";
+String androidColorsFile(String? appModule, String? flavor, bool isProjectApp) =>
+    "${appModule?.isEmpty == true ? '' : '../$appModule/'}${isProjectApp ? '' : '.'}android/app/src/${flavor ?? 'main'}/res/values/colors.xml";
 
-String androidManifestFile(String? appModule) => '${appModule?.isEmpty == true ? '' : '../$appModule/'}android/app/src/main/AndroidManifest.xml';
-String androidGradleFile(String? appModule) => '${appModule?.isEmpty == true ? '' : '../$appModule/'}android/app/build.gradle';
-String androidLocalPropertiesFile(String? appModule) => '${appModule?.isEmpty == true ? '' : '../$appModule/'}android/local.properties';
+String androidManifestFile(String? appModule, bool isProjectApp) => '${appModule?.isEmpty == true ? '' : '../$appModule/'}${isProjectApp ? '' : '.'}android/app/src/main/AndroidManifest.xml';
+String androidGradleFile(String? appModule, bool isProjectApp) => '${appModule?.isEmpty == true ? '' : '../$appModule/'}${isProjectApp ? '' : '.'}android/app/build.gradle';
+String androidLocalPropertiesFile(String? appModule, bool isProjectApp) => '${appModule?.isEmpty == true ? '' : '../$appModule/'}${isProjectApp ? '' : '.'}android/local.properties';
 
 /// Relative path to flutter.gradle from flutter sdk path
 const String androidFlutterGardlePath =
@@ -24,14 +24,14 @@ const int androidDefaultAndroidMinSDK = 21;
 const String androidFileName = 'ic_launcher.png';
 const String androidAdaptiveForegroundFileName = 'ic_launcher_foreground.png';
 const String androidAdaptiveBackgroundFileName = 'ic_launcher_background.png';
-String androidAdaptiveXmlFolder(String? appModule, String? flavor) =>
-    androidResFolder(appModule, flavor) + 'mipmap-anydpi-v26/';
+String androidAdaptiveXmlFolder(String? appModule, String? flavor, bool isProjectApp) =>
+    androidResFolder(appModule, flavor, isProjectApp) + 'mipmap-anydpi-v26/';
 const String androidDefaultIconName = 'ic_launcher';
 
-String iosDefaultIconFolder(String? appModule) =>
-    '${appModule?.isEmpty == true ? '' : '../$appModule/'}ios/Runner/Assets.xcassets/AppIcon.appiconset/';
-String iosAssetFolder(String? appModule) => '${appModule?.isEmpty == true ? '' : '../$appModule/'}ios/Runner/Assets.xcassets/';
-String iosConfigFile(String? appModule) => '${appModule?.isEmpty == true ? '' : '../$appModule/'}ios/Runner.xcodeproj/project.pbxproj';
+String iosDefaultIconFolder(String? appModule, bool isProjectApp) =>
+    '${appModule?.isEmpty == true ? '' : '../$appModule/'}${isProjectApp ? '' : '.'}ios/Runner/Assets.xcassets/AppIcon.appiconset/';
+String iosAssetFolder(String? appModule, bool isProjectApp) => '${appModule?.isEmpty == true ? '' : '../$appModule/'}${isProjectApp ? '' : '.'}ios/Runner/Assets.xcassets/';
+String iosConfigFile(String? appModule, bool isProjectApp) => '${appModule?.isEmpty == true ? '' : '../$appModule/'}${isProjectApp ? '' : '.'}ios/Runner.xcodeproj/project.pbxproj';
 const String iosDefaultIconName = 'Icon-App';
 
 // web

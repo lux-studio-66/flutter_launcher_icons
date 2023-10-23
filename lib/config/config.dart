@@ -21,6 +21,7 @@ class Config {
   /// Creates an instance of [Config]
   const Config({
     this.appModule,
+    this.isProject,
     this.imagePath,
     this.android = false,
     this.ios = false,
@@ -102,6 +103,10 @@ class Config {
   /// Module that generate
   @JsonKey(name: 'app_module')
   final String? appModule;
+
+  /// Module that generate
+  @JsonKey(name: 'is_project')
+  final bool? isProject;
 
   /// Generic image_path
   @JsonKey(name: 'image_path')
@@ -192,6 +197,8 @@ class Config {
   bool get isNeedingNewIOSIcon => ios != false;
 
   String? getAppModule() => appModule ?? '';
+
+  bool get isProjectApp => isProject ?? true;
 
   /// Method for the retrieval of the Android icon path
   /// If image_path_android is found, this will be prioritised over the image_path

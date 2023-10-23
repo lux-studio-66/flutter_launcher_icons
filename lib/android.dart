@@ -48,14 +48,14 @@ void createDefaultIcons(
   if (image == null) {
     return;
   }
-  final File androidManifestFile = File(constants.androidManifestFile(config.getAppModule()));
+  final File androidManifestFile = File(constants.androidManifestFile(config.getAppModule(), config.isProjectApp));
   if (config.isCustomAndroidFile) {
     utils.printStatus('Adding a new Android launcher icon');
     final String iconName = config.android;
     isAndroidIconNameCorrectFormat(iconName);
     final String iconPath = '$iconName.png';
     for (AndroidIconTemplate template in androidIcons) {
-      _saveNewImages(template, config.getAppModule(), image, iconPath, flavor);
+      _saveNewImages(template, config.getAppModule(), config.isProjectApp, image, iconPath, flavor);
     }
     overwriteAndroidManifestWithNewLauncherIcon(iconName, androidManifestFile);
   } else {
@@ -66,6 +66,7 @@ void createDefaultIcons(
       overwriteExistingIcons(
         template,
         config.getAppModule(),
+        config.isProjectApp,
         image,
         constants.androidFileName,
         flavor,
@@ -111,6 +112,7 @@ void createAdaptiveIcons(
     overwriteExistingIcons(
       androidIcon,
       config.getAppModule(),
+      config.isProjectApp,
       foregroundImage,
       constants.androidAdaptiveForegroundFileName,
       flavor,
@@ -126,7 +128,7 @@ void createAdaptiveIcons(
     );
   } else {
     createAdaptiveIconMipmapXmlFile(config, flavor);
-    updateColorsXmlFile(config.getAppModule(), backgroundConfig, flavor);
+    updateColorsXmlFile(config.getAppModule(), backgroundConfig, flavor, config.isProjectApp);
   }
 }
 
@@ -137,8 +139,8 @@ void createAdaptiveIcons(
 ///
 /// If not, the colors.xml file is created and a color item for the adaptive icon
 /// background is included in the new colors.xml file.
-void updateColorsXmlFile(String? appModule, String backgroundConfig, String? flavor) {
-  final File colorsXml = File(constants.androidColorsFile(appModule, flavor));
+void updateColorsXmlFile(String? appModule, String backgroundConfig, String? flavor, bool isProjectApp) {
+  final File colorsXml = File(constants.androidColorsFile(appModule, flavor, isProjectApp));
   if (colorsXml.existsSync()) {
     utils.printStatus(
       'Updating colors.xml with color for adaptive icon background',
@@ -149,7 +151,7 @@ void updateColorsXmlFile(String? appModule, String backgroundConfig, String? fla
     utils.printStatus(
       'Creating colors.xml file and adding it to your Android project',
     );
-    createNewColorsFile(appModule, backgroundConfig, flavor);
+    createNewColorsFile(appModule, backgroundConfig, flavor, isProjectApp);
   }
 }
 
@@ -161,7 +163,7 @@ void createAdaptiveIconMipmapXmlFile(
 ) {
   if (config.isCustomAndroidFile) {
     File(
-      constants.androidAdaptiveXmlFolder(config.getAppModule(), flavor) +
+      constants.androidAdaptiveXmlFolder(config.getAppModule(), flavor, config.isProjectApp) +
           config.android +
           '.xml',
     ).create(recursive: true).then((File adaptiveIcon) {
@@ -169,7 +171,7 @@ void createAdaptiveIconMipmapXmlFile(
     });
   } else {
     File(
-      constants.androidAdaptiveXmlFolder(config.getAppModule(), flavor) +
+      constants.androidAdaptiveXmlFolder(config.getAppModule(), flavor, config.isProjectApp) +
           constants.androidDefaultIconName +
           '.xml',
     ).create(recursive: true).then((File adaptiveIcon) {
@@ -196,6 +198,7 @@ void _createAdaptiveBackgrounds(
     _saveNewImages(
       androidIcon,
       config.getAppModule(),
+      config.isProjectApp,
       image,
       constants.androidAdaptiveBackgroundFileName,
       flavor,
@@ -206,7 +209,7 @@ void _createAdaptiveBackgrounds(
   // FILE LOCATED HERE:  res/mipmap-anydpi/{icon-name-from-yaml-config}.xml
   if (config.isCustomAndroidFile) {
     File(
-      constants.androidAdaptiveXmlFolder(config.getAppModule(), flavor) +
+      constants.androidAdaptiveXmlFolder(config.getAppModule(), flavor, config.isProjectApp) +
           config.android +
           '.xml',
     ).create(recursive: true).then((File adaptiveIcon) {
@@ -214,7 +217,7 @@ void _createAdaptiveBackgrounds(
     });
   } else {
     File(
-      constants.androidAdaptiveXmlFolder(config.getAppModule(), flavor) +
+      constants.androidAdaptiveXmlFolder(config.getAppModule(), flavor, config.isProjectApp) +
           constants.androidDefaultIconName +
           '.xml',
     ).create(recursive: true).then((File adaptiveIcon) {
@@ -224,8 +227,8 @@ void _createAdaptiveBackgrounds(
 }
 
 /// Creates a colors.xml file if it was missing from android/app/src/main/res/values/colors.xml
-void createNewColorsFile(String? appModule, String backgroundColor, String? flavor) {
-  File(constants.androidColorsFile(appModule, flavor))
+void createNewColorsFile(String? appModule, String backgroundColor, String? flavor, bool isProjectApp) {
+  File(constants.androidColorsFile(appModule, flavor, isProjectApp))
       .create(recursive: true)
       .then((File colorsFile) {
     colorsFile.writeAsString(xml_template.colorsXml).then((File file) {
@@ -268,13 +271,14 @@ void updateColorsFile(File colorsFile, String backgroundColor) {
 void overwriteExistingIcons(
   AndroidIconTemplate template,
   String? appModule,
+  bool isProjectApp,
   Image image,
   String filename,
   String? flavor,
 ) {
   final Image newFile = utils.createResizedImage(template.size, image);
   File(
-    constants.androidResFolder(appModule, flavor) +
+    constants.androidResFolder(appModule, flavor, isProjectApp) +
         template.directoryName +
         '/' +
         filename,
@@ -289,13 +293,14 @@ void overwriteExistingIcons(
 void _saveNewImages(
   AndroidIconTemplate template,
   String? appModule,
+  bool isProjectApp,
   Image image,
   String iconFilePath,
   String? flavor,
 ) {
   final Image newFile = utils.createResizedImage(template.size, image);
   File(
-    constants.androidResFolder(appModule, flavor) +
+    constants.androidResFolder(appModule, flavor, isProjectApp) +
         template.directoryName +
         '/' +
         iconFilePath,
