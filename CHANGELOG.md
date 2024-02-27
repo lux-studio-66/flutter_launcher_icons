@@ -1,5 +1,10 @@
 # Changelog
 
+## Custom version
+- Add `app_module` yaml file support clean architecture
+- Add `appModule` in `Config` model
+- Add `getAppModule()` func in android.dart, ios.dart and web_icon_generator.dart
+
 ## 0.13.1 (15th April 2023)
 
 - Can now use `flutter_launcher_icons` instead of `flutter_icons` [#478](https://github.com/fluttercommunity/flutter_launcher_icons/pull/478)

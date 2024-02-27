@@ -119,14 +119,25 @@ class WebIconGenerator extends IconGenerator {
   void _generateFavicon(Image image) {
     final favIcon = utils.createResizedImage(constants.kFaviconSize, image);
     final favIconFile = utils.createFileIfNotExist(
-      path.join(context.prefixPath, constants.webFaviconFilePath),
+      path.join(
+          context.config.appModule == null ||
+                  context.config.appModule?.isEmpty == true
+              ? context.prefixPath
+              : '../${context.config.appModule}',
+          constants.webFaviconFilePath),
     );
     favIconFile.writeAsBytesSync(encodePng(favIcon));
   }
 
   void _generateIcons(Image image) {
     final iconsDir = utils.createDirIfNotExist(
-      path.join(context.prefixPath, constants.webIconsDirPath),
+      path.join(
+        context.config.appModule == null ||
+                context.config.appModule?.isEmpty == true
+            ? context.prefixPath
+            : '../${context.config.appModule}',
+        constants.webIconsDirPath,
+      ),
     );
     // generate icons
     for (final template in _webIconSizeTemplates) {
@@ -140,7 +151,13 @@ class WebIconGenerator extends IconGenerator {
 
   void _updateManifestFile() {
     final manifestFile = utils.createFileIfNotExist(
-      path.join(context.prefixPath, constants.webManifestFilePath),
+      path.join(
+        context.config.appModule == null ||
+                context.config.appModule?.isEmpty == true
+            ? context.prefixPath
+            : '../${context.config.appModule}',
+        constants.webManifestFilePath,
+      ),
     );
     final manifestConfig =
         jsonDecode(manifestFile.readAsStringSync()) as Map<String, dynamic>;
